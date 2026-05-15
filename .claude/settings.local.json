@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem \"D:\\\\WEB\\\\Landing Page\\\\Aura\" -Recurse)",
+      "Bash(Select-Object FullName, Length)"
+    ]
+  }
+}
