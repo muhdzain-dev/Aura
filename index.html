@@ -1286,7 +1286,7 @@
         Register Interest
       </a>
       <a href="Aura - Quick Facts - Spring Grand Opening.pdf" target="_blank" class="btn btn-ghost-w">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.57 3.42 2 2 0 0 1 3.54 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.44a16 16 0 0 0 6.29 6.29l.84-.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         Download Brochure
       </a>
       <a href="tel:+12899493929" class="btn btn-ghost-w">
@@ -1879,55 +1879,54 @@
     <!-- RIGHT: Inquiry Form -->
     <div class="ct-form-side rvr">
       <div class="ct-form-inner">
-        <p class="ct-form-eyebrow">Private Consultation</p>
-        <h3 class="ct-form-ttl">Book Your<br><em>Exclusive Viewing</em></h3>
-        <p class="ct-form-sub">
-          Reach Akhtar directly for VIP early access, priority suite allocation,
-          and exclusive pre-launch pricing — not available to the general public.
-        </p>
+        <form id="leadForm">
+            <div id="statusMessage" style="display: none; margin-bottom: 15px; padding: 12px; border-radius: 3px; text-align: center; color: white;"></div>
+            <p class="ct-form-eyebrow">Register Your Interest</p>
+            <h3 class="ct-form-ttl">Your <em>Aura</em> Awaits</h3>
+            <p class="ct-form-sub">Fill out the form below to receive the brochure, floor plans, and exclusive updates directly to your inbox.</p>
 
-        <form id="inqForm" novalidate>
-          <div class="f-row">
-            <div class="f-group">
-              <label class="f-label" for="fName">First Name *</label>
-              <input type="text" id="fName" name="firstName" class="f-input" placeholder="John" required>
+            <div class="f-row">
+              <div class="f-group">
+                <label for="first_name" class="f-label">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="f-input" placeholder="John" required>
+              </div>
+              <div class="f-group">
+                <label for="last_name" class="f-label">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="f-input" placeholder="Smith" required>
+              </div>
             </div>
+
             <div class="f-group">
-              <label class="f-label" for="lName">Last Name *</label>
-              <input type="text" id="lName" name="lastName" class="f-input" placeholder="Smith" required>
+              <label for="email" class="f-label">Email Address</label>
+              <input type="email" id="email" name="email" class="f-input" placeholder="john.smith@example.com" required>
             </div>
-          </div>
-          <div class="f-group">
-            <label class="f-label" for="fEmail">Email Address *</label>
-            <input type="email" id="fEmail" name="email" class="f-input" placeholder="john@example.com" required>
-          </div>
-          <div class="f-group">
-            <label class="f-label" for="fPhone">Phone Number *</label>
-            <input type="tel" id="fPhone" name="phone" class="f-input" placeholder="+1 (416) 000-0000" required>
-          </div>
-          <div class="f-group">
-            <label class="f-label" for="fType">I'm Interested In</label>
-            <select id="fType" name="interest" class="f-input">
-              <option value="">Select suite type</option>
-              <option value="2bed">2 Bedroom Townhome</option>
-              <option value="3bed">3 Bedroom Townhome</option>
-              <option value="invest">Investment Purchase</option>
-              <option value="info">General Information</option>
-            </select>
-          </div>
-          <div class="f-group">
-            <label class="f-label" for="fMsg">Message (Optional)</label>
-            <textarea id="fMsg" name="message" class="f-input" placeholder="Any specific questions or requests for Akhtar..."></textarea>
-          </div>
-          <button type="submit" class="f-submit">Request My Private Consultation</button>
-          <p class="f-legal">🔒 Your details go directly to Akhtar Shaikh — strictly confidential, no spam, ever.</p>
+
+            <div class="f-group">
+              <label for="phone" class="f-label">Phone Number</label>
+              <input type="tel" id="phone" name="phone" class="f-input" placeholder="(555) 123-4567">
+            </div>
+
+            <div class="f-group">
+              <label for="interest" class="f-label">I'm Interested In</label>
+              <select id="interest" name="interest" class="f-input">
+                <option>One Bedroom Suites</option>
+                <option>Two Bedroom Suites</option>
+                <option>Three Bedroom Suites</option>
+                <option>Penthouse Collection</option>
+              </select>
+            </div>
+
+            <div class="f-group">
+              <label for="message" class="f-label">Message</label>
+              <textarea id="message" name="message" class="f-input" placeholder="I'd like to learn more about..."></textarea>
+            </div>
+            
+            <input type="hidden" name="source" value="Aura Landing Page">
+            <input type="hidden" name="landing_page" value="Aura at Lakeview Village">
+
+            <button type="submit" class="f-submit">Register Now</button>
+            <p class="f-legal">By registering, you consent to receiving electronic communications from Caivan. You can unsubscribe at any time.</p>
         </form>
-
-        <div class="form-done" id="formDone">
-          <div class="form-done-ico">✅</div>
-          <h4 class="form-done-ttl">Request Received!</h4>
-          <p class="form-done-txt">Akhtar will personally reach out within 24 hours to discuss your options at Aura at Lakeview Village.</p>
-        </div>
       </div>
     </div>
 
@@ -2114,16 +2113,7 @@ gsap.ticker.lagSmoothing(0);
    PRELOADER
 ==================================================== */
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('preloader').classList.add('hidden');
-
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.to('#hEye',   { opacity: 1, y: 0, duration: 1.0 }, 0.2)
-      .to('#hTitle', { opacity: 1, y: 0, duration: 1.2 }, 0.4)
-      .to('#hSub',   { opacity: 1, y: 0, duration: 1.0 }, 0.7)
-      .to('#hCtas',  { opacity: 1, y: 0, duration: 0.9 }, 1.0)
-      .to('#hStats', { opacity: 1, x: 0, duration: 1.0 }, 1.3);
-  }, 1800);
+  document.getElementById('preloader').classList.add('hidden');
 });
 
 /* ====================================================
@@ -2137,14 +2127,13 @@ window.addEventListener('scroll', () => {
 /* ====================================================
    MOBILE NAV
 ==================================================== */
-const mNav      = document.getElementById('mNav');
-const navBurger = document.getElementById('navBurger');
-const mNavClose = document.getElementById('mNavClose');
-
-navBurger.addEventListener('click', () => { mNav.classList.add('open'); lenis.stop(); });
-mNavClose.addEventListener('click', () => { mNav.classList.remove('open'); lenis.start(); });
-document.querySelectorAll('.ml').forEach(a => {
-  a.addEventListener('click', () => { mNav.classList.remove('open'); lenis.start(); });
+const burger = document.querySelector('.nav-burger');
+const mobileNav = document.querySelector('.m-nav');
+const mobileNavClose = document.querySelector('.m-nav-close');
+burger.addEventListener('click', () => mobileNav.classList.add('open'));
+mobileNavClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+document.querySelectorAll('.m-nav a').forEach(link => {
+  link.addEventListener('click', () => mobileNav.classList.remove('open'));
 });
 
 /* ====================================================
@@ -2271,20 +2260,33 @@ gsap.to('.ct-form-inner', {
 /* ====================================================
    SWIPER GALLERY
 ==================================================== */
-const galSwiper = new Swiper('.swiper-gal', {
-  slidesPerView: 1.15,
-  spaceBetween: 18,
-  centeredSlides: true,
+const swiper = new Swiper('.swiper-gal', {
   loop: true,
-  speed: 900,
-  grabCursor: true,
-  pagination: { el: '.swiper-pagination', clickable: true },
-  navigation: { nextEl: '#galNext', prevEl: '#galPrev' },
-  breakpoints: {
-    640:  { slidesPerView: 1.35, spaceBetween: 22 },
-    900:  { slidesPerView: 1.75, spaceBetween: 26 },
-    1200: { slidesPerView: 2.2,  spaceBetween: 30 },
+  slidesPerView: 'auto',
+  spaceBetween: 16,
+  centeredSlides: true,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
   },
+  navigation: {
+    nextEl: '.gal-next',
+    prevEl: '.gal-prev',
+  },
+  breakpoints: {
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 2.5,
+      spaceBetween: 24,
+    },
+    1280: {
+      slidesPerView: 3.2,
+      spaceBetween: 28,
+    }
+  }
 });
 
 /* ====================================================
@@ -2324,7 +2326,7 @@ document.querySelectorAll('.btn').forEach(btn => {
    SMOOTH ANCHOR LINKS
 ==================================================== */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
+  a.addEventListener('click', function (e) {
     const target = document.querySelector(a.getAttribute('href'));
     if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -76, duration: 1.6 }); }
   });
