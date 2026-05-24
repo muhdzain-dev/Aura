@@ -1921,6 +1921,7 @@
           </div>
           <button type="submit" class="f-submit">Request My Private Consultation</button>
           <p class="f-legal">🔒 Your details go directly to Akhtar Shaikh — strictly confidential, no spam, ever.</p>
+          <p class="f-legal" id="formStatus" style="display:none;margin-top:12px;"></p>
         </form>
 
         <div class="form-done" id="formDone">
@@ -2335,16 +2336,24 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 ==================================================== */
 const inqForm  = document.getElementById('inqForm');
 const formDone = document.getElementById('formDone');
+const formStatus = document.getElementById('formStatus');
+const LEAD_API_ENDPOINT = 'https://crispy-pond-repeal.ngrok-free.dev/api/leads';
 
 inqForm.addEventListener('submit', e => {
   e.preventDefault();
 
   const fName  = document.getElementById('fName');
+  const lName  = document.getElementById('lName');
   const fEmail = document.getElementById('fEmail');
   const fPhone = document.getElementById('fPhone');
-  const invalid = [fName, fEmail, fPhone].filter(f => !f.value.trim());
+  const fType  = document.getElementById('fType');
+  const fMsg   = document.getElementById('fMsg');
+  const invalid = [fName, lName, fEmail, fPhone].filter(f => !f.value.trim());
 
   if (invalid.length) {
+    formStatus.style.display = 'block';
+    formStatus.style.color = '#E53E3E';
+    formStatus.textContent = 'Please fill in all required fields before submitting.';
     invalid.forEach(f => {
       f.style.borderColor = '#E53E3E';
       f.animate([
@@ -2358,14 +2367,56 @@ inqForm.addEventListener('submit', e => {
   }
 
   const submitBtn = inqForm.querySelector('.f-submit');
+  const originalLabel = submitBtn.textContent;
   submitBtn.textContent = 'Submitting…';
   submitBtn.disabled = true;
+  formStatus.style.display = 'none';
 
-  setTimeout(() => {
-    inqForm.style.display = 'none';
-    formDone.style.display = 'block';
-    formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 1100);
+  const payload = {
+    first_name: fName.value.trim(),
+    last_name: lName.value.trim(),
+    email: fEmail.value.trim(),
+    phone: fPhone.value.trim(),
+    source: 'aura-landing-page',
+    landing_page: window.location.href,
+    tags: ['Aura', fType.value || 'general-info'].join(',')
+  };
+
+  if (fMsg.value.trim()) {
+    payload.tags += ',has-message';
+  }
+
+  fetch(LEAD_API_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+    .then(async response => {
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const errorMessage = data.message || data.error || 'Unable to submit your request right now.';
+        throw new Error(errorMessage);
+      }
+
+      inqForm.style.display = 'none';
+      formDone.style.display = 'block';
+      formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+    .catch(error => {
+      formStatus.style.display = 'block';
+      formStatus.style.color = '#E53E3E';
+      formStatus.textContent = error.message.includes('email')
+        ? 'This email is already registered. Please use a different email or contact Akhtar directly.'
+        : error.message;
+    })
+    .finally(() => {
+      submitBtn.textContent = originalLabel;
+      submitBtn.disabled = false;
+    });
 });
 
 /* ====================================================
