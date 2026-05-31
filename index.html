@@ -1160,6 +1160,195 @@
     .d5 { transition-delay: 0.42s; }
 
     /* ================================================
+       FLOORPLAN SECTION — Static 3-Image Showcase
+    ================================================ */
+    #floorplans { background: var(--charcoal); padding: 96px 0 100px; }
+    .fp-head { text-align: center; margin-bottom: 68px; padding: 0 48px; }
+    .fp-head .s-eye { justify-content: center; color: var(--gold-light); }
+    .fp-head .s-eye::before { background: var(--gold-light); display: none; }
+    .fp-head .s-title { color: var(--white); }
+    .fp-head .s-title em { color: var(--gold-light); }
+
+    .fp-showcase-wrapper {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%;
+    }
+
+    .fp-showcase {
+      display: grid; grid-template-columns: 1fr 1.8fr 1fr;
+      gap: 28px; width: 100%; max-width: 1200px;
+      padding: 0 56px; align-items: center; justify-items: center;
+    }
+
+    .fp-image-card {
+      position: relative; border-radius: 3px; overflow: hidden;
+      aspect-ratio: 3/4; background: var(--charcoal);
+      height: 580px; width: 100%; cursor: default;
+      transition: transform 0.3s;
+    }
+
+    .fp-image-card:hover { transform: translateY(-6px); }
+
+    .fp-image-card img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.9s var(--ease-out), filter 0.8s ease;
+      filter: blur(0px) brightness(1);
+    }
+
+    .fp-image-card:hover img { transform: scale(1.03); }
+
+    .fp-image-card.locked img {
+      filter: blur(12px) brightness(0.75) !important;
+    }
+
+    .fp-image-card.unlocked img {
+      filter: blur(0px) brightness(1) !important;
+    }
+
+    .fp-center { grid-column: 2; }
+
+    .fp-locked-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+      z-index: 10; transition: background 0.6s ease;
+    }
+
+    .fp-image-card.unlocked .fp-locked-overlay {
+      display: none;
+    }
+
+    .fp-lock-icon {
+      font-size: 4rem; display: flex;
+      align-items: center; justify-content: center;
+      animation: lockFloat 2.2s ease-in-out infinite;
+    }
+
+    @keyframes lockFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .fp-locked-text {
+      color: rgba(255,255,255,0.9); font-size: 1rem;
+      font-weight: 500; text-align: center; letter-spacing: 0.08em;
+    }
+
+    .fp-slide-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 20px 18px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      z-index: 5;
+    }
+
+    .fp-button-wrapper {
+      display: flex; justify-content: center; width: 100%;
+      margin-top: 56px;
+    }
+
+    .fp-unlock-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 48px;
+      background: var(--gold); color: var(--white);
+      border: none; font-family: var(--sans);
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      cursor: pointer; border-radius: 2px;
+      box-shadow: 0 4px 20px rgba(184,150,62,0.35);
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .fp-unlock-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(184,150,62,0.42);
+    }
+
+    /* Modal */
+    .fp-modal {
+      display: none; position: fixed; inset: 0;
+      z-index: 9950; background: rgba(0,0,0,0.65);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .fp-modal.open { display: flex; }
+    .fp-modal-content {
+      background: var(--white); border-radius: 12px;
+      max-width: 540px; width: 100%;
+      padding: 56px 48px; box-shadow: 0 48px 120px rgba(0,0,0,0.15);
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+    .fp-modal-close {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 2rem; cursor: pointer; background: none;
+      border: none; color: var(--gray); line-height: 1;
+      transition: color 0.2s;
+    }
+    .fp-modal-close:hover { color: var(--charcoal); }
+    .fp-modal-title {
+      font-family: var(--serif); font-size: 1.9rem; font-weight: 400;
+      color: var(--charcoal); margin-bottom: 8px; line-height: 1.2;
+    }
+    .fp-modal-sub {
+      font-size: 0.88rem; color: var(--gray); margin-bottom: 28px;
+      line-height: 1.6; font-weight: 300;
+    }
+    .fp-form-group { margin-bottom: 16px; }
+    .fp-success {
+      display: none; text-align: center; padding: 44px 0;
+    }
+    .fp-success.show { display: block; }
+    .fp-success-ico { font-size: 3.2rem; margin-bottom: 20px; }
+    .fp-success-ttl {
+      font-family: var(--serif); font-size: 1.6rem;
+      color: var(--charcoal); margin-bottom: 10px; font-weight: 400;
+    }
+    .fp-success-txt {
+      font-size: 0.9rem; color: var(--gray); margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .fp-success-btns {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .fp-success-btns a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      background: var(--gold); color: var(--white);
+      font-family: var(--sans); font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      border-radius: 2px; transition: background 0.3s, transform 0.2s;
+      text-decoration: none; border: none; cursor: pointer;
+    }
+    .fp-success-btns a:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 1200px) {
+      .fp-showcase { gap: 20px; padding: 0 36px; }
+      .fp-image-card { height: 520px; }
+    }
+    @media (max-width: 900px) {
+      .fp-showcase { grid-template-columns: 1fr; gap: 24px; padding: 0 24px; }
+      .fp-image-card { height: 420px; aspect-ratio: auto; }
+      .fp-center { grid-column: auto; }
+      .fp-head { padding: 0 20px; margin-bottom: 52px; }
+      .fp-button-wrapper { margin-top: 40px; }
+    }
+    @media (max-width: 640px) {
+      #floorplans { padding: 72px 0 80px; }
+      .fp-showcase { padding: 0 16px; gap: 16px; }
+      .fp-image-card { height: 360px; }
+      .fp-unlock-btn { width: 100%; justify-content: center; }
+      .fp-modal-content { padding: 44px 28px; }
+      .fp-modal-title { font-size: 1.5rem; }
+      .fp-lock-icon { font-size: 3rem; }
+      .fp-locked-text { font-size: 0.9rem; }
+    }
+
+    /* ================================================
        RESPONSIVE
     ================================================ */
     @media (max-width: 1100px) {
@@ -1242,6 +1431,7 @@
     <li><a href="#highlights">Features</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#location">Location</a></li>
+    <li><a href="#floorplans">Floor Plans</a></li>
     <li><a href="#contact" class="nav-cta-btn">Register Interest</a></li>
   </ul>
 
@@ -1256,6 +1446,7 @@
   <a href="#highlights" class="ml">Features</a>
   <a href="#gallery"    class="ml">Gallery</a>
   <a href="#location"   class="ml">Location</a>
+  <a href="#floorplans" class="ml">Floor Plans</a>
   <a href="#contact"    class="ml">Register</a>
 </div>
 
@@ -1787,10 +1978,108 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download Quick Facts
       </a>
-      <a href="#contact" class="btn btn-ghost-w">Request Floor Plans</a>
+      <a href="#floorplans" class="btn btn-ghost-w">Request Floor Plans</a>
     </div>
   </div>
 </section>
+
+<!-- ============================================================
+     FLOORPLANS — LEAD CAPTURE SECTION
+============================================================ -->
+<section id="floorplans">
+  <div class="fp-head rv">
+    <p class="s-eye">Exclusive Access</p>
+    <h2 class="s-title">Get 1st Access to<br><em>Floorplans</em></h2>
+  </div>
+
+  <div class="fp-showcase-wrapper">
+    <div class="fp-showcase">
+      <!-- Left: Locked Floorplan Preview -->
+      <div class="fp-image-card locked" id="fpLockedLeft">
+        <img src="floorplan.png" alt="Aura Floorplan - Additional Plans" loading="lazy">
+        <div class="fp-locked-overlay">
+          <div class="fp-lock-icon">🔒</div>
+          <div class="fp-locked-text">Unlock to View</div>
+        </div>
+        <div class="fp-slide-cap">Additional Plans &nbsp;·&nbsp; Locked</div>
+      </div>
+
+      <!-- Center: Main Focal Point Floorplan -->
+      <div class="fp-image-card fp-center unlocked" id="fpCenter">
+        <img src="floorplan.png" alt="Aura Main Floorplan - Luxury Interior with Fireplace" loading="lazy">
+        <div class="fp-slide-cap">Main Floorplan &nbsp;·&nbsp; Available</div>
+      </div>
+
+      <!-- Right: Locked Pricing & Documents Preview -->
+      <div class="fp-image-card locked" id="fpLockedRight">
+        <img src="floorplan.png" alt="Aura Floorplan - Pricing &amp; Documents" loading="lazy">
+        <div class="fp-locked-overlay">
+          <div class="fp-lock-icon">🔒</div>
+          <div class="fp-locked-text">Unlock to View</div>
+        </div>
+        <div class="fp-slide-cap">Pricing &amp; Documents &nbsp;·&nbsp; Locked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fp-button-wrapper">
+    <button class="fp-unlock-btn" id="fpUnlockBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Unlock Floorplans
+    </button>
+  </div>
+</section>
+
+<!-- Floorplan Unlock Modal -->
+<div class="fp-modal" id="fpModal">
+  <div class="fp-modal-content">
+    <button class="fp-modal-close" id="fpModalClose">&times;</button>
+
+    <!-- Form -->
+    <div id="fpFormWrapper">
+      <h3 class="fp-modal-title">Get Exclusive Access</h3>
+      <p class="fp-modal-sub">
+        Enter your details to unlock all floorplans, pricing packages, and project documents.
+      </p>
+
+      <form id="fpForm" novalidate>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="fp-form-group">
+            <label class="f-label" for="fpFirstName">First Name *</label>
+            <input type="text" id="fpFirstName" name="firstName" class="f-input" placeholder="John" required>
+          </div>
+          <div class="fp-form-group">
+            <label class="f-label" for="fpLastName">Last Name *</label>
+            <input type="text" id="fpLastName" name="lastName" class="f-input" placeholder="Smith" required>
+          </div>
+        </div>
+        <div class="fp-form-group">
+          <label class="f-label" for="fpEmail">Email Address *</label>
+          <input type="email" id="fpEmail" name="email" class="f-input" placeholder="john@example.com" required>
+        </div>
+        <div class="fp-form-group">
+          <label class="f-label" for="fpPhone">Phone Number *</label>
+          <input type="tel" id="fpPhone" name="phone" class="f-input" placeholder="+1 (416) 000-0000" required>
+        </div>
+        <button type="submit" class="f-submit">Unlock Now</button>
+        <p class="f-legal" id="fpFormStatus" style="display: none; margin-top: 12px;"></p>
+      </form>
+    </div>
+
+    <!-- Success State -->
+    <div class="fp-success" id="fpSuccess">
+      <div class="fp-success-ico">✅</div>
+      <h4 class="fp-success-ttl">Your Exclusive Access Is Ready</h4>
+      <p class="fp-success-txt">
+        Thank you for your interest. You can now access the floorplans, pricing package, and project documents.
+      </p>
+      <div class="fp-success-btns">
+        <a href="#" id="fpViewDocsBtn" target="_blank">📂 View Documents</a>
+        <button type="button" id="fpCloseBtn" style="background: transparent; color: var(--charcoal); border: 1px solid var(--border-light); padding: 13px 28px;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================
      CONTACT — BROKER PROFILE + INQUIRY FORM
@@ -1953,7 +2242,7 @@
           test of time. With Aura at Lakeview Village, they bring their most
           prestigious vision to the waterfront.
         </p>
-        <a href="https://www.caivan.com" target="_blank" class="btn btn-gold" style="margin-top:28px;display:inline-flex;">
+        <a href="#" onclick="location.reload()" target="_blank" class="btn btn-gold" style="margin-top:28px;display:inline-flex;">
           Learn About Caivan
         </a>
       </div>
@@ -2033,6 +2322,7 @@
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="#amenities">Amenities</a></li>
         <li><a href="#location">Location</a></li>
+        <li><a href="#floorplans">Floor plans</a></li>
         <li><a href="#contact">Register Interest</a></li>
       </ul>
     </div>
@@ -2289,6 +2579,11 @@ const galSwiper = new Swiper('.swiper-gal', {
 });
 
 /* ====================================================
+   FLOORPLANS — Static Layout (no carousel)
+==================================================== */
+// Static layout - no Swiper needed
+
+/* ====================================================
    LIGHTBOX
 ==================================================== */
 const lbox     = document.getElementById('lbox');
@@ -2337,9 +2632,9 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 const inqForm  = document.getElementById('inqForm');
 const formDone = document.getElementById('formDone');
 const formStatus = document.getElementById('formStatus');
-const LEAD_API_ENDPOINT = 'https://crispy-pond-repeal.ngrok-free.dev/api/leads';
+const LEAD_API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyfOa_kNU8curv_RaJJT_OhlrnTh_4Y5WenkpSj9CD_YsA8tguGjayV64StnQ7mG9Narw/exec';
 
-inqForm.addEventListener('submit', e => {
+inqForm.addEventListener('submit', async e => {
   e.preventDefault();
 
   const fName  = document.getElementById('fName');
@@ -2372,51 +2667,44 @@ inqForm.addEventListener('submit', e => {
   submitBtn.disabled = true;
   formStatus.style.display = 'none';
 
+  // Payload structure for Google Apps Script
   const payload = {
     first_name: fName.value.trim(),
     last_name: lName.value.trim(),
     email: fEmail.value.trim(),
     phone: fPhone.value.trim(),
-    source: 'aura-landing-page',
-    landing_page: window.location.href,
-    tags: ['Aura', fType.value || 'general-info'].join(',')
+    interested: fType.value || '',
+    message: fMsg.value.trim() || ''
   };
 
-  if (fMsg.value.trim()) {
-    payload.tags += ',has-message';
-  }
-
-  fetch(LEAD_API_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
-    .then(async response => {
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        const errorMessage = data.message || data.error || 'Unable to submit your request right now.';
-        throw new Error(errorMessage);
-      }
-
-      inqForm.style.display = 'none';
-      formDone.style.display = 'block';
-      formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    })
-    .catch(error => {
-      formStatus.style.display = 'block';
-      formStatus.style.color = '#E53E3E';
-      formStatus.textContent = error.message.includes('email')
-        ? 'This email is already registered. Please use a different email or contact Akhtar directly.'
-        : error.message;
-    })
-    .finally(() => {
-      submitBtn.textContent = originalLabel;
-      submitBtn.disabled = false;
+  try {
+    const response = await fetch(LEAD_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     });
+
+    const responseData = await response.json();
+
+    if (!response.ok || responseData.status !== 'success') {
+      throw new Error(responseData.message || 'Unable to submit your request.');
+    }
+
+    // Success: Hide form and show success message
+    inqForm.style.display = 'none';
+    formDone.style.display = 'block';
+    formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  } catch (error) {
+    formStatus.style.display = 'block';
+    formStatus.style.color = '#E53E3E';
+    formStatus.textContent = error.message || 'Unable to submit your request right now. Please try again or contact Akhtar directly.';
+  } finally {
+    submitBtn.textContent = originalLabel;
+    submitBtn.disabled = false;
+  }
 });
 
 /* ====================================================
@@ -2427,6 +2715,145 @@ document.querySelectorAll('img[loading="lazy"]').forEach(img => {
   img.style.transition = 'opacity 0.7s ease';
   const show = () => { img.style.opacity = '1'; };
   if (img.complete) { show(); } else { img.addEventListener('load', show); }
+});
+
+/* ====================================================
+   FLOORPLAN SECTION — UNLOCK & ACCESS
+==================================================== */
+const GOOGLE_DRIVE_FOLDER = 'https://drive.google.com/drive/folders/12a1TomDmJge5DgyaC4XUzB3FwUpvjaYn';
+const STORAGE_KEY = 'aura_floorplan_access_granted';
+
+// Check if user already has access
+function checkFloorplanAccess() {
+  return localStorage.getItem(STORAGE_KEY) === 'true';
+}
+
+// Grant access and update UI
+function grantFloorplanAccess() {
+  localStorage.setItem(STORAGE_KEY, 'true');
+
+  // Unlock all floor plan cards
+  const allCards = document.querySelectorAll('.fp-image-card');
+  allCards.forEach(card => {
+    card.classList.remove('locked');
+    card.classList.add('unlocked');
+  });
+}
+
+// Modal controls
+const fpModal = document.getElementById('fpModal');
+const fpUnlockBtn = document.getElementById('fpUnlockBtn');
+const fpModalClose = document.getElementById('fpModalClose');
+const fpForm = document.getElementById('fpForm');
+const fpFormWrapper = document.getElementById('fpFormWrapper');
+const fpSuccess = document.getElementById('fpSuccess');
+const fpCloseBtn = document.getElementById('fpCloseBtn');
+const fpViewDocsBtn = document.getElementById('fpViewDocsBtn');
+const fpFormStatus = document.getElementById('fpFormStatus');
+
+// Open modal
+fpUnlockBtn.addEventListener('click', () => {
+  fpModal.classList.add('open');
+  lenis.stop();
+});
+
+// Close modal
+function closeFloorplanModal() {
+  fpModal.classList.remove('open');
+  lenis.start();
+  fpForm.reset();
+  fpFormStatus.style.display = 'none';
+  fpFormWrapper.style.display = 'block';
+  fpSuccess.classList.remove('show');
+}
+
+fpModalClose.addEventListener('click', closeFloorplanModal);
+fpModal.addEventListener('click', e => {
+  if (e.target === fpModal) closeFloorplanModal();
+});
+fpCloseBtn.addEventListener('click', closeFloorplanModal);
+
+// Form submission
+fpForm.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const fName = document.getElementById('fpFirstName');
+  const lName = document.getElementById('fpLastName');
+  const fEmail = document.getElementById('fpEmail');
+  const fPhone = document.getElementById('fpPhone');
+  const invalid = [fName, lName, fEmail, fPhone].filter(f => !f.value.trim());
+
+  if (invalid.length) {
+    fpFormStatus.style.display = 'block';
+    fpFormStatus.style.color = '#E53E3E';
+    fpFormStatus.textContent = 'Please fill in all required fields.';
+    invalid.forEach(f => {
+      f.style.borderColor = '#E53E3E';
+      f.animate([
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(5px)' },
+        { transform: 'translateX(-4px)' },
+        { transform: 'translateX(4px)' },
+        { transform: 'translateX(0)' }
+      ], { duration: 400 });
+      setTimeout(() => { f.style.borderColor = ''; }, 1500);
+    });
+    return;
+  }
+
+  const submitBtn = fpForm.querySelector('.f-submit');
+  const originalLabel = submitBtn.textContent;
+  submitBtn.textContent = 'Submitting…';
+  submitBtn.disabled = true;
+  fpFormStatus.style.display = 'none';
+
+  const payload = {
+    first_name: fName.value.trim(),
+    last_name: lName.value.trim(),
+    email: fEmail.value.trim(),
+    phone: fPhone.value.trim(),
+    interested: 'floorplan-unlock',
+    message: ''
+  };
+
+  try {
+    const response = await fetch(LEAD_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok || responseData.status !== 'success') {
+      throw new Error(responseData.message || 'Unable to submit your request.');
+    }
+
+    // Grant access
+    grantFloorplanAccess();
+
+    // Show success
+    fpFormWrapper.style.display = 'none';
+    fpSuccess.classList.add('show');
+    fpViewDocsBtn.href = GOOGLE_DRIVE_FOLDER;
+
+  } catch (error) {
+    fpFormStatus.style.display = 'block';
+    fpFormStatus.style.color = '#E53E3E';
+    fpFormStatus.textContent = error.message || 'Unable to submit your request. Please try again.';
+  } finally {
+    submitBtn.textContent = originalLabel;
+    submitBtn.disabled = false;
+  }
+});
+
+// Check existing access on page load
+window.addEventListener('load', () => {
+  if (checkFloorplanAccess()) {
+    grantFloorplanAccess();
+  }
 });
 </script>
 

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "aura-dev-server",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "D:\\WEB\\Landing Page\\Aura"],
+      "port": 8000
+    }
+  ]
+}
