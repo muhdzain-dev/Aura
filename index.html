@@ -2668,8 +2668,8 @@ inqForm.addEventListener('submit', async e => {
   formStatus.style.display = 'none';
 
   // URL-encoded form data — populates e.parameter in Google Apps Script.
-  // URLSearchParams auto-sets a CORS-safe content type, so no custom header
-  // is needed (and none is allowed in no-cors mode).
+  // We deliberately do NOT set a Content-Type header: URLSearchParams produces
+  // a CORS-safe content type, keeping this a "simple request" (no preflight).
   const params = new URLSearchParams();
   params.append('first_name', fName.value.trim());
   params.append('last_name', lName.value.trim());
@@ -2681,25 +2681,29 @@ inqForm.addEventListener('submit', async e => {
   try {
     console.log('Submitting form data');
 
-    // Google Apps Script Web Apps cannot return CORS headers, so we use
-    // no-cors mode. The response is opaque (unreadable) but the data is
-    // still delivered and saved to the sheet.
-    await fetch(LEAD_API_ENDPOINT, {
+    // CORS mode: Google Apps Script auto-adds Access-Control-Allow-Origin: *
+    // to its response, so we can read the JSON result back.
+    const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      mode: 'no-cors',
       body: params
     });
 
-    // Opaque response — assume success if no network error was thrown.
-    inqForm.style.display = 'none';
-    formDone.style.display = 'block';
-    formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const responseData = await response.json();
+    console.log('Response data:', responseData);
+
+    if (responseData.status === 'success') {
+      inqForm.style.display = 'none';
+      formDone.style.display = 'block';
+      formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      throw new Error(responseData.message || 'Submission failed. Please try again.');
+    }
 
   } catch (error) {
     console.error('Form submission error:', error);
     formStatus.style.display = 'block';
     formStatus.style.color = '#E53E3E';
-    formStatus.textContent = 'Unable to submit your request right now. Please try again or contact Akhtar directly.';
+    formStatus.textContent = error.message || 'Unable to submit your request right now. Please try again or contact Akhtar directly.';
   } finally {
     submitBtn.textContent = originalLabel;
     submitBtn.disabled = false;
@@ -2807,6 +2811,7 @@ fpForm.addEventListener('submit', async e => {
   fpFormStatus.style.display = 'none';
 
   // URL-encoded form data — populates e.parameter in Google Apps Script.
+  // No custom Content-Type header, so this stays a CORS "simple request".
   const params = new URLSearchParams();
   params.append('first_name', fName.value.trim());
   params.append('last_name', lName.value.trim());
@@ -2818,26 +2823,30 @@ fpForm.addEventListener('submit', async e => {
   try {
     console.log('Submitting floorplan form data');
 
-    // Google Apps Script Web Apps cannot return CORS headers, so we use
-    // no-cors mode. The response is opaque but the data still saves.
-    await fetch(LEAD_API_ENDPOINT, {
+    // CORS mode: read the JSON response back from Google Apps Script.
+    const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      mode: 'no-cors',
       body: params
     });
 
-    // Opaque response — assume success if no network error was thrown.
-    grantFloorplanAccess();
+    const responseData = await response.json();
+    console.log('Response data:', responseData);
 
-    fpFormWrapper.style.display = 'none';
-    fpSuccess.classList.add('show');
-    fpViewDocsBtn.href = GOOGLE_DRIVE_FOLDER;
+    if (responseData.status === 'success') {
+      grantFloorplanAccess();
+
+      fpFormWrapper.style.display = 'none';
+      fpSuccess.classList.add('show');
+      fpViewDocsBtn.href = GOOGLE_DRIVE_FOLDER;
+    } else {
+      throw new Error(responseData.message || 'Submission failed. Please try again.');
+    }
 
   } catch (error) {
     console.error('Floorplan form submission error:', error);
     fpFormStatus.style.display = 'block';
     fpFormStatus.style.color = '#E53E3E';
-    fpFormStatus.textContent = 'Unable to submit your request. Please try again.';
+    fpFormStatus.textContent = error.message || 'Unable to submit your request. Please try again.';
   } finally {
     submitBtn.textContent = originalLabel;
     submitBtn.disabled = false;
