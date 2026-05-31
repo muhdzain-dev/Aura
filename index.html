@@ -2667,37 +2667,40 @@ inqForm.addEventListener('submit', async e => {
   submitBtn.disabled = true;
   formStatus.style.display = 'none';
 
-  // Payload structure for Google Apps Script
-  const payload = {
-    first_name: fName.value.trim(),
-    last_name: lName.value.trim(),
-    email: fEmail.value.trim(),
-    phone: fPhone.value.trim(),
-    interested: fType.value || '',
-    message: fMsg.value.trim() || ''
-  };
+  // Create FormData for Google Apps Script
+  const formData = new FormData();
+  formData.append('first_name', fName.value.trim());
+  formData.append('last_name', lName.value.trim());
+  formData.append('email', fEmail.value.trim());
+  formData.append('phone', fPhone.value.trim());
+  formData.append('interested', fType.value || '');
+  formData.append('message', fMsg.value.trim() || '');
 
   try {
+    console.log('Submitting form data');
+
     const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+      body: formData
     });
+
+    console.log('Response status:', response.status);
 
     const responseData = await response.json();
 
-    if (!response.ok || responseData.status !== 'success') {
-      throw new Error(responseData.message || 'Unable to submit your request.');
+    console.log('Response data:', responseData);
+
+    if (responseData.status === 'success') {
+      // Success: Hide form and show success message
+      inqForm.style.display = 'none';
+      formDone.style.display = 'block';
+      formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      throw new Error(responseData.message || 'Submission failed. Please try again.');
     }
 
-    // Success: Hide form and show success message
-    inqForm.style.display = 'none';
-    formDone.style.display = 'block';
-    formDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
   } catch (error) {
+    console.error('Form submission error:', error);
     formStatus.style.display = 'block';
     formStatus.style.color = '#E53E3E';
     formStatus.textContent = error.message || 'Unable to submit your request right now. Please try again or contact Akhtar directly.';
@@ -2807,39 +2810,43 @@ fpForm.addEventListener('submit', async e => {
   submitBtn.disabled = true;
   fpFormStatus.style.display = 'none';
 
-  const payload = {
-    first_name: fName.value.trim(),
-    last_name: lName.value.trim(),
-    email: fEmail.value.trim(),
-    phone: fPhone.value.trim(),
-    interested: 'floorplan-unlock',
-    message: ''
-  };
+  // Create FormData for Google Apps Script
+  const formData = new FormData();
+  formData.append('first_name', fName.value.trim());
+  formData.append('last_name', lName.value.trim());
+  formData.append('email', fEmail.value.trim());
+  formData.append('phone', fPhone.value.trim());
+  formData.append('interested', 'floorplan-unlock');
+  formData.append('message', '');
 
   try {
+    console.log('Submitting floorplan form data');
+
     const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+      body: formData
     });
+
+    console.log('Response status:', response.status);
 
     const responseData = await response.json();
 
-    if (!response.ok || responseData.status !== 'success') {
-      throw new Error(responseData.message || 'Unable to submit your request.');
+    console.log('Response data:', responseData);
+
+    if (responseData.status === 'success') {
+      // Grant access
+      grantFloorplanAccess();
+
+      // Show success
+      fpFormWrapper.style.display = 'none';
+      fpSuccess.classList.add('show');
+      fpViewDocsBtn.href = GOOGLE_DRIVE_FOLDER;
+    } else {
+      throw new Error(responseData.message || 'Submission failed. Please try again.');
     }
 
-    // Grant access
-    grantFloorplanAccess();
-
-    // Show success
-    fpFormWrapper.style.display = 'none';
-    fpSuccess.classList.add('show');
-    fpViewDocsBtn.href = GOOGLE_DRIVE_FOLDER;
-
   } catch (error) {
+    console.error('Floorplan form submission error:', error);
     fpFormStatus.style.display = 'block';
     fpFormStatus.style.color = '#E53E3E';
     fpFormStatus.textContent = error.message || 'Unable to submit your request. Please try again.';
