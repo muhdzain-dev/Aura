@@ -2667,21 +2667,24 @@ inqForm.addEventListener('submit', async e => {
   submitBtn.disabled = true;
   formStatus.style.display = 'none';
 
-  // Create FormData for Google Apps Script
-  const formData = new FormData();
-  formData.append('first_name', fName.value.trim());
-  formData.append('last_name', lName.value.trim());
-  formData.append('email', fEmail.value.trim());
-  formData.append('phone', fPhone.value.trim());
-  formData.append('interested', fType.value || '');
-  formData.append('message', fMsg.value.trim() || '');
+  // Create URL-encoded form data (Google Apps Script prefers this)
+  const params = new URLSearchParams();
+  params.append('first_name', fName.value.trim());
+  params.append('last_name', lName.value.trim());
+  params.append('email', fEmail.value.trim());
+  params.append('phone', fPhone.value.trim());
+  params.append('interested', fType.value || '');
+  params.append('message', fMsg.value.trim() || '');
 
   try {
     console.log('Submitting form data');
 
     const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
     });
 
     console.log('Response status:', response.status);
@@ -2810,21 +2813,24 @@ fpForm.addEventListener('submit', async e => {
   submitBtn.disabled = true;
   fpFormStatus.style.display = 'none';
 
-  // Create FormData for Google Apps Script
-  const formData = new FormData();
-  formData.append('first_name', fName.value.trim());
-  formData.append('last_name', lName.value.trim());
-  formData.append('email', fEmail.value.trim());
-  formData.append('phone', fPhone.value.trim());
-  formData.append('interested', 'floorplan-unlock');
-  formData.append('message', '');
+  // Create URL-encoded form data (Google Apps Script prefers this)
+  const params = new URLSearchParams();
+  params.append('first_name', fName.value.trim());
+  params.append('last_name', lName.value.trim());
+  params.append('email', fEmail.value.trim());
+  params.append('phone', fPhone.value.trim());
+  params.append('interested', 'floorplan-unlock');
+  params.append('message', '');
 
   try {
     console.log('Submitting floorplan form data');
 
     const response = await fetch(LEAD_API_ENDPOINT, {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
     });
 
     console.log('Response status:', response.status);
